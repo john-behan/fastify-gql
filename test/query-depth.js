@@ -138,7 +138,7 @@ const goodResponse = {
   }
 }
 
-test('queryDepth - test total depth is within queryDepth parameter', async (t) => {
+test('queryDepth - test total depth is within queryDepth parameter - Int', async (t) => {
   const app = Fastify()
 
   app.register(GQL, {
@@ -155,7 +155,7 @@ test('queryDepth - test total depth is within queryDepth parameter', async (t) =
   t.deepEqual(res, goodResponse)
 })
 
-test('queryDepth - test total depth is over queryDepth parameter', async (t) => {
+test('queryDepth - test total depth is over queryDepth parameter - Int', async (t) => {
   const app = Fastify()
 
   app.register(GQL, {
@@ -176,4 +176,24 @@ test('queryDepth - test total depth is over queryDepth parameter', async (t) => 
   } catch (error) {
     t.deepEqual(error, err)
   }
+})
+
+test('queryDepth - test specific depth is within queryDepth parameter - Object', async (t) => {
+  const app = Fastify()
+
+  app.register(GQL, {
+    schema,
+    resolvers,
+    queryDepth: {
+      owner: 3,
+      pet: 3
+    }
+  })
+
+  // needed so that graphql is defined
+  await app.ready()
+
+  const res = await app.graphql(query)
+
+  t.deepEqual(res, goodResponse)
 })
